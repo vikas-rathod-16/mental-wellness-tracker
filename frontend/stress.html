@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CalmMind — Stress Check</title>
+  <link rel="stylesheet" href="stress.css">
+</head>
+<body>
+  <div id="app" data-theme="light">
+
+    <header class="nav small">
+      <a class="back" href="index.html" aria-label="Back to home">← Back</a>
+      <div class="nav-actions">
+        <button id="themeToggle" class="icon-btn">🌙</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>Mood Check</h2>
+        <p class="muted">Type a short sentence about how you're feeling.</p>
+
+        <textarea id="moodInput" rows="5" placeholder="I feel..." aria-label="Mood input"></textarea>
+
+        <div class="controls">
+          <button id="checkBtn" class="btn primary">Check Stress</button>
+          <button id="saveBtn" class="btn outline" disabled>Save Log</button>
+        </div>
+
+        <div id="result" class="result hidden" aria-live="polite">
+          <div id="resultCard" class="result-card">
+            <div class="result-title">Stress Level</div>
+            <div id="stressValue" class="stress-number">—</div>
+            <div id="sentimentText" class="muted small"></div>
+          </div>
+        </div>
+
+        <div id="status" class="muted small" style="margin-top:12px"></div>
+      </section>
+    </main>
+
+    <footer class="footer muted container">Change API URL in <code>stress.js</code> (BASE_URL).</footer>
+  </div>
+
+  <script src="stress.js"></script>
+</body>
+</html>

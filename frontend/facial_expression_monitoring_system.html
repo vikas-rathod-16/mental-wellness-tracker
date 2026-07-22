@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Facial Expression Monitor</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 2rem;
+      text-align: center;
+      color: #111827;
+    }
+    h1 {
+      margin-bottom: 1rem;
+      color: #1f2937;
+    }
+    .video-container {
+      display: inline-block;
+      position: relative;
+      border: 2px solid #374151;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+    }
+    video, canvas {
+      display: block;
+      width: 400px;
+      height: 300px;
+    }
+    #result {
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #2563eb;
+    }
+    .error {
+      color: #dc2626;
+      margin-top: 1rem;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #2563eb;
+      color: #fff;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+  <h1>Facial Expression Monitoring</h1>
+  <div class="video-container">
+    <video id="video" autoplay muted></video>
+    <canvas id="canvas" width="400" height="300"></canvas>
+  </div>
+  <div id="result">Expression: <span id="expression">N/A</span></div>
+  <div id="error" class="error"></div>
+  <button id="toggleBtn">Start Monitoring</button>
+  <a class="back" href="index.html">← Back</a>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const expressionEl = document.getElementById('expression');
+    const errorEl = document.getElementById('error');
+    const toggleBtn = document.getElementById('toggleBtn');
+
+    let monitoring = false;
+    let intervalId = null;
+
+    // Initialize webcam
+    async function initCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        errorEl.textContent = "";
+      } catch (err) {
+        errorEl.textContent = "⚠️ Unable to access webcam: " + err.message;
+      }
+    }
+
+    // AI_URL: Python FastAPI service (ai-service/main.py) that runs FER
+    const AI_URL = "http://127.0.0.1:8001";
+
+    // Capture frame and send to the ai-service for face/emotion analysis
+    async function captureFrame() {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        const formData = new FormData();
+        formData.append('file', blob, 'frame.jpg');
+
+        try {
+          const response = await fetch(`${AI_URL}/analyze-face`, {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!response.ok) throw new Error("Server error: " + response.status);
+
+          const result = await response.json();
+          const conf = result.confidence != null ? ` (${Math.round(result.confidence * 100)}% confident, stress ${result.stress_score}%)` : '';
+          expressionEl.textContent = (result.emotion || "Unknown") + conf;
+          errorEl.textContent = "";
+        } catch (err) {
+          errorEl.textContent = "⚠️ Error analyzing frame: " + err.message;
+        }
+      }, 'image/jpeg', 0.85);
+    }
+
+    // Toggle monitoring
+    toggleBtn.addEventListener('click', () => {
+      if (!monitoring) {
+        intervalId = setInterval(captureFrame, 2000); // every 2s
+        toggleBtn.textContent = "Stop Monitoring";
+        monitoring = true;
+      } else {
+        clearInterval(intervalId);
+        toggleBtn.textContent = "Start Monitoring";
+        monitoring = false;
+      }
+    });
+
+    // Start camera on load
+    initCamera();
+  </script>
+</body>
+</html>

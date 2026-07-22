@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Voice Tone Stress Detector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0f172a; /* slate-900 */
+      --card: #111827; /* gray-900 */
+      --text: #e5e7eb; /* gray-200 */
+      --accent: #22c55e; /* green-500 */
+      --warn: #fbbf24; /* amber-400 */
+      --alert: #ef4444; /* red-500 */
+      --muted: #9ca3af; /* gray-400 */
+    }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px circle at 10% 10%, #0b1220, var(--bg));
+      color: var(--text);
+      margin: 0; padding: 2rem;
+      display: grid; place-items: center;
+    }
+    .app {
+      max-width: 800px; width: 100%;
+      background: linear-gradient(180deg, #0e1525, var(--card));
+      border: 1px solid #1f2937;
+      border-radius: 16px; padding: 1.5rem;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+    h1 { margin: 0 0 0.5rem; font-weight: 700; letter-spacing: 0.2px; }
+    p.subtitle { margin: 0 0 1rem; color: var(--muted); }
+    .controls { display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    button {
+      background: #1f2937; color: var(--text);
+      border: 1px solid #334155; padding: 0.6rem 1rem;
+      border-radius: 10px; cursor: pointer;
+    }
+    button.primary { background: #2563eb; border-color: #1d4ed8; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .card {
+      background: #0b1220; border: 1px solid #1f2937;
+      border-radius: 12px; padding: 1rem;
+    }
+    .meter { height: 12px; background: #1f2937; border-radius: 999px; overflow: hidden; margin-top: 0.5rem; }
+    .bar { height: 100%; width: 0%; background: var(--accent); transition: width 180ms ease, background 180ms ease; }
+    .stat { display: flex; justify-content: space-between; margin: 0.2rem 0; color: var(--muted); }
+    .score {
+      font-size: 2.2rem; font-weight: 800; margin: 0.25rem 0;
+    }
+    .score.low { color: var(--accent); }
+    .score.med { color: var(--warn); }
+    .score.high { color: var(--alert); }
+    .notes { font-size: 0.92rem; color: var(--muted); margin-top: 0.75rem; }
+    canvas { width: 100%; height: 80px; background: #0b1220; border: 1px solid #1f2937; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Voice Tone Stress Detector</h1>
+    <p class="subtitle">Live voice features → heuristic stress score (non-diagnostic)</p>
+
+    <div class="controls">
+      <button id="startBtn" class="primary">Start microphone</button>
+      <button id="stopBtn" disabled>Stop</button>
+      <button id="calmBtn">Calming breath (2 min)</button>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Live features</h3>
+        <div class="stat"><span>Loudness (RMS)</span><span id="rmsVal">0.00</span></div>
+        <div class="meter"><div id="rmsBar" class="bar"></div></div>
+
+        <div class="stat"><span>Pitch estimate (Hz)</span><span id="pitchVal">–</span></div>
+        <div class="meter"><div id="pitchBar" class="bar"></div></div>
+
+        <div class="stat"><span>Pitch variability</span><span id="pitchVarVal">0.00</span></div>
+        <div class="meter"><div id="pitchVarBar" class="bar"></div></div>
+
+        <div class="stat"><span>Speaking rate (segments/min)</span><span id="rateVal">0</span></div>
+        <div class="meter"><div id="rateBar" class="bar"></div></div>
+
+        <div class="notes">Tip: speak a sentence or two. Higher loudness, erratic pitch, and rapid rate may increase score.</div>
+      </div>
+
+      <div class="card">
+        <h3>Stress score</h3>
+        <div id="scoreVal" class="score low">0</div>
+        <div class="notes">Heuristic blend of features (0–100). Low: 0–33, Medium: 34–66, High: 67–100.</div>
+        <canvas id="wave"></canvas>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1rem;">
+      <h3>What’s measured</h3>
+      <ul>
+        <li><strong>Loudness:</strong> Root Mean Square of audio frames.</li>
+        <li><strong>Pitch:</strong> Autocorrelation-based fundamental frequency estimate.</li>
+        <li><strong>Pitch variability:</strong> Short-term standard deviation of pitch.</li>
+        <li><strong>Speaking rate:</strong> Voice-activity segments per minute (approx).</li>
+      </ul>
+      <p class="notes">Use modern browsers (Chrome/Edge). For speech-to-text or sentiment, pair with the Web Speech API tutorials and text valence examples.</p>
+    </div>
+    <a class="back" href="index.html">← Back</a>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn  = document.getElementById('stopBtn');
+    const calmBtn  = document.getElementById('calmBtn');
+
+    const rmsVal = document.getElementById('rmsVal');
+    const pitchVal = document.getElementById('pitchVal');
+    const pitchVarVal = document.getElementById('pitchVarVal');
+    const rateVal = document.getElementById('rateVal');
+
+    const rmsBar = document.getElementById('rmsBar');
+    const pitchBar = document.getElementById('pitchBar');
+    const pitchVarBar = document.getElementById('pitchVarBar');
+    const rateBar = document.getElementById('rateBar');
+
+    const scoreEl = document.getElementById('scoreVal');
+    const waveCanvas = document.getElementById('wave');
+    const ctx = waveCanvas.getContext('2d');
+
+    let audioCtx, analyser, source, data, running = false;
+    let pitchHistory = [];
+    let vadSegments = [];
+    let lastVadOn = false;
+    let startTime = null;
+    let rafId = null;
+
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      waveCanvas.width = waveCanvas.clientWidth * dpr;
+      waveCanvas.height = waveCanvas.clientHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    async function start() {
+      if (running) return;
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 2048;
+        analyser.smoothingTimeConstant = 0.2;
+
+        source = audioCtx.createMediaStreamSource(stream);
+        source.connect(analyser);
+
+        data = new Float32Array(analyser.fftSize);
+        pitchHistory = [];
+        vadSegments = [];
+        lastVadOn = false;
+        startTime = performance.now();
+        running = true;
+
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+
+        loop();
+      } catch (e) {
+        alert('Microphone permission required. Please allow access and try again.');
+      }
+    }
+
+    function stop() {
+      if (!running) return;
+      running = false;
+      if (source && source.mediaStream) {
+        source.mediaStream.getTracks().forEach(t => t.stop());
+      }
+      if (audioCtx) audioCtx.close();
+      cancelAnimationFrame(rafId);
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+    }
+
+    // Autocorrelation pitch estimate
+    function estimatePitch(buf, sampleRate) {
+      // Hanning window
+      for (let i = 0; i < buf.length; i++) {
+        buf[i] *= 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (buf.length - 1));
+      }
+      // Autocorrelation
+      const size = buf.length;
+      const corr = new Float32Array(size);
+      for (let lag = 0; lag < size; lag++) {
+        let sum = 0;
+        for (let i = 0; i < size - lag; i++) {
+          sum += buf[i] * buf[i + lag];
+        }
+        corr[lag] = sum;
+      }
+      // Find peak after first minimum
+      let d = 0;
+      while (corr[d] > corr[d + 1]) d++;
+      let maxIndex = d;
+      let maxVal = -Infinity;
+      for (let i = d; i < size; i++) {
+        if (corr[i] > maxVal) {
+          maxVal = corr[i];
+          maxIndex = i;
+        }
+      }
+      if (maxIndex === 0) return null;
+      const freq = sampleRate / maxIndex;
+      if (freq < 50 || freq > 500) return null; // human speech range
+      return freq;
+    }
+
+    function computeRMS(buf) {
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+      return Math.sqrt(sum / buf.length);
+    }
+
+    function updateMeters(rms, pitch, pitchVar, rate) {
+      rmsVal.textContent = rms.toFixed(3);
+      pitchVal.textContent = pitch ? Math.round(pitch) : '–';
+      pitchVarVal.textContent = pitchVar.toFixed(3);
+      rateVal.textContent = Math.round(rate);
+
+      const clamp01 = (x) => Math.max(0, Math.min(1, x));
+      rmsBar.style.width = `${clamp01(rms / 0.2) * 100}%`;
+      pitchBar.style.width = `${clamp01((pitch ? (pitch - 80) / 220 : 0)) * 100}%`;
+      pitchVarBar.style.width = `${clamp01(pitchVar / 40) * 100}%`;
+      rateBar.style.width = `${clamp01(rate / 200) * 100}%`;
+
+      // Heuristic score blend
+      const wRms = 0.35, wVar = 0.35, wRate = 0.20, wPitch = 0.10;
+      const nRms = clamp01(rms / 0.2);
+      const nVar = clamp01(pitchVar / 40);
+      const nRate = clamp01(rate / 180);
+      const nPitch = pitch ? clamp01((pitch - 150) / 200) : 0.2; // mid bias if unknown
+      const score = Math.round(100 * (wRms*nRms + wVar*nVar + wRate*nRate + wPitch*nPitch));
+
+      scoreEl.textContent = score;
+      scoreEl.classList.remove('low','med','high');
+      scoreEl.classList.add(score < 34 ? 'low' : score < 67 ? 'med' : 'high');
+
+      // Color ramps on bars
+      const colorFor = (v) => v < 0.34 ? '#22c55e' : v < 0.67 ? '#fbbf24' : '#ef4444';
+      rmsBar.style.background = colorFor(nRms);
+      pitchBar.style.background = colorFor(nPitch);
+      pitchVarBar.style.background = colorFor(nVar);
+      rateBar.style.background = colorFor(nRate);
+    }
+
+    function drawWave(buf) {
+      ctx.clearRect(0,0,waveCanvas.width,waveCanvas.height);
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      const h = waveCanvas.height / (window.devicePixelRatio || 1);
+      const w = waveCanvas.width / (window.devicePixelRatio || 1);
+      for (let i = 0; i < buf.length; i++) {
+        const x = (i / buf.length) * w;
+        const y = h/2 + buf[i] * (h/2 - 6);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    function loop() {
+      analyser.getFloatTimeDomainData(data);
+
+      const rms = computeRMS(data);
+      const pitch = estimatePitch(data.slice(), audioCtx.sampleRate);
+
+      // Pitch history and variability
+      if (pitch) pitchHistory.push(pitch);
+      if (pitchHistory.length > 60) pitchHistory.shift(); // ~1–2s window
+
+      let pitchVar = 0;
+      if (pitchHistory.length > 8) {
+        const mean = pitchHistory.reduce((a,b)=>a+b,0) / pitchHistory.length;
+        const variance = pitchHistory.reduce((a,b)=>a + (b-mean)*(b-mean), 0) / pitchHistory.length;
+        pitchVar = Math.sqrt(variance);
+      }
+
+      // Simple VAD: RMS threshold with hysteresis
+      const vadOn = rms > 0.02;
+      const now = performance.now();
+      if (vadOn && !lastVadOn) {
+        vadSegments.push({ t: now, on: true });
+      }
+      if (!vadOn && lastVadOn) {
+        vadSegments.push({ t: now, on: false });
+      }
+      lastVadOn = vadOn;
+
+      // Speaking rate: segment transitions per minute
+      let rate = 0;
+      if (startTime) {
+        const elapsedMin = (now - startTime) / 60000;
+        const transitions = vadSegments.filter(s => s.on).length;
+        rate = elapsedMin > 0 ? transitions / elapsedMin : 0;
+      }
+
+      updateMeters(rms, pitch, pitchVar, rate);
+      drawWave(data);
+
+      rafId = requestAnimationFrame(loop);
+    }
+
+    calmBtn.addEventListener('click', () => {
+      const steps = [
+        { label: 'Inhale 4s', secs: 4 },
+        { label: 'Hold 4s', secs: 4 },
+        { label: 'Exhale 6s', secs: 6 },
+        { label: 'Hold 2s', secs: 2 },
+      ];
+      let i = 0, cycles = 0;
+      const msg = document.createElement('div');
+      msg.className = 'notes';
+      document.querySelector('.app').appendChild(msg);
+      function guide() {
+        const step = steps[i];
+        msg.textContent = `Breathing: ${step.label}`;
+        i = (i + 1) % steps.length;
+        cycles++;
+        if (cycles < 60) setTimeout(guide, step.secs * 1000); // ~2 minutes
+        else msg.remove();
+      }
+      guide();
+    });
+
+    startBtn.addEventListener('click', start);
+    stopBtn.addEventListener('click', stop);
+  </script>
+</body>
+</html>

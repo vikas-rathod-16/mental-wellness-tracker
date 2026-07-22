@@ -1,0 +1,26 @@
+/* stress.css — styles for stress.html (shares look with index, standalone) */
+
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Roboto,'Poppins',sans-serif;background:#f7fbff;color:#073044;padding:18px}
+.app{max-width:900px;margin:0 auto}
+.nav.small{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.back{font-weight:700;color:#075b8b;text-decoration:none}
+.card{background:white;border-radius:14px;padding:18px;border:1px solid rgba(0,0,0,0.04);box-shadow:0 8px 20px rgba(2,6,23,0.04)}
+.muted{color:#5f7b86}
+textarea{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);margin-top:10px;background:transparent}
+.controls{display:flex;gap:12px;margin-top:12px}
+.btn{padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+.primary{background:linear-gradient(180deg,#61aefc,#3b8df2);color:white;border:none}
+.outline{background:transparent;border:2px solid #bfe6ff;color:#075b8b}
+.result{margin-top:14px}
+.result-card{padding:12px;border-radius:12px;text-align:center}
+.result-card.green{background:#dff6e8}
+.result-card.orange{background:#fff3db}
+.result-card.red{background:#ffe5e5}
+.stress-number{font-size:30px;font-weight:800}
+.footer{margin-top:16px;color:#6b8794}
+
+/* responsive */
+@media (max-width:640px){
+  .controls{flex-direction:column}
+}

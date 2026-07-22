@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CalmMind — Chat</title>
+  <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+  <div id="app" data-theme="light">
+
+    <header class="nav small">
+      <a class="back" href="index.html">← Back</a>
+      <div class="nav-actions">
+        <button id="themeToggle" class="icon-btn">🌙</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="card chat-card">
+        <h2>Wellness Chat</h2>
+        <div id="chatBox" class="chat-box" role="log" aria-live="polite"></div>
+
+        <form id="chatForm" class="chat-form" onsubmit="return false;">
+          <input id="chatInput" placeholder="How are you feeling?" autocomplete="off" />
+          <button id="sendBtn" class="btn primary">Send</button>
+        </form>
+
+        <div id="chatStatus" class="muted small" style="margin-top:10px"></div>
+      </section>
+    </main>
+
+    <footer class="footer container muted">Change API URL in <code>chat.js</code>.</footer>
+  </div>
+
+  <script src="chat.js"></script>
+  
+</body>
+</html>

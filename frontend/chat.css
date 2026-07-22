@@ -1,0 +1,19 @@
+/* chat.css — chat page styles (standalone) */
+
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Roboto,'Poppins',sans-serif;background:#f7fbff;color:#073044;padding:18px}
+.container{max-width:900px;margin:0 auto}
+.nav.small{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.back{font-weight:700;color:#075b8b;text-decoration:none}
+.card{background:white;border-radius:14px;padding:18px;border:1px solid rgba(0,0,0,0.04);box-shadow:0 8px 20px rgba(2,6,23,0.04)}
+.chat-card{display:flex;flex-direction:column;gap:12px;height:70vh}
+.chat-box{flex:1;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(0,0,0,0.02),transparent);overflow:auto}
+.msg{max-width:78%;padding:10px;border-radius:12px;margin:8px 0}
+.user-msg{margin-left:auto;background:linear-gradient(180deg,#61aefc,#3b8df2);color:white}
+.bot-msg{background:rgba(0,0,0,0.04)}
+.chat-form{display:flex;gap:8px;margin-top:8px}
+.chat-form input{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06)}
+.btn{padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+.primary{background:linear-gradient(180deg,#61aefc,#3b8df2);color:white;border:none}
+.muted{color:#5f7b86}
+.small{font-size:13px}

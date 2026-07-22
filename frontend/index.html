@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Wellness & Stress Tracker</title>
+  <style>
+    /* ====== RESET ====== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; color: #333; }
+
+    /* ====== NAVBAR ====== */
+    header {
+      background: linear-gradient(135deg, #6a82fb, #fc5c7d);
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+      letter-spacing: 1px;
+      animation: fadeInLeft 1s ease;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      align-items: center;
+    }
+    nav ul li {
+      position: relative;
+      margin: 0 15px;
+    }
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    nav ul li a:hover { color: #ffe082; }
+
+    /* Dropdown */
+    nav ul li ul {
+      position: absolute;
+      top: 35px;
+      left: 0;
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      display: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    nav ul li:hover ul { display: block; }
+    nav ul li ul li { margin: 10px 0; }
+    nav ul li ul li a { color: #333; }
+
+    /* ====== HERO SECTION ====== */
+    .hero {
+      text-align: center;
+      padding: 80px 20px;
+      background: url('https://img.freepik.com/premium-photo/blurred-natural-background-spring-summer-defocused-greenery-background-park-nature_1028938-68537.jpg') no-repeat center/cover;
+      color: #fff;
+      animation: fadeIn 2s ease;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+    }
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+    .btn {
+      background: #ffe082;
+      color: #333;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 10px;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .btn:hover { transform: scale(1.1); background: #ffd54f; }
+
+    /* ====== FEATURES SECTION ====== */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 60px;
+    }
+    .card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      animation: slideUp 1s ease;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .card h3 { color: #6a82fb; margin-bottom: 10px; }
+
+    /* ====== FOOTER ====== */
+    footer {
+      background: #333;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+
+    /* ====== ANIMATIONS ====== */
+    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+    @keyframes fadeInLeft { from {opacity: 0; transform: translateX(-50px);} to {opacity: 1; transform: translateX(0);} }
+    @keyframes slideUp { from {opacity: 0; transform: translateY(50px);} to {opacity: 1; transform: translateY(0);} }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <div class="logo">🧘 Wellness Tracker</div>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Balance Your Mind, Track Your Stress</h1>
+    <p>Discover insights, practice mindfulness, and monitor your emotional well-being with advanced tools.</p>
+    <a href="stress.html"><button class="btn">Check Stress</button></a>
+    <a href="chat.html"><button class="btn">Chat with AI</button></a>
+    <a href="voice_tone.html"><button class="btn">Voice Tone Analysis</button></a>
+    <a href="facial_expression_monitoring_system.html"><button class="btn">Facial Expression Monitoring</button></a>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="card">
+      <h3>📊 Stress Logs</h3>
+      <p>Track daily stress levels and visualize your progress with interactive charts.</p>
+    </div>
+    <div class="card">
+      <h3>🧘 Mindfulness Tips</h3>
+      <p>Personalized breathing exercises and meditation practices to calm your mind.</p>
+    </div>
+    <div class="card">
+      <h3>🎤 Voice Tone Analysis</h3>
+      <p>Analyze your voice tone to detect stress and emotional patterns.</p>
+    </div>
+    <div class="card">
+      <h3>😊 Facial Monitoring</h3>
+      <p>Advanced AI detects facial expressions to monitor emotional states.</p>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" style="padding:60px; text-align:center;">
+    <h2>Contact Us</h2>
+    <p>Email: support@wellnesstracker.com | Phone: +91-9019602418</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Mental Wellness Tracker. All rights reserved.</p>
+  </footer>
+
+  <!-- JavaScript for Animations -->
+  <script>
+    // Smooth scroll for nav links
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Hero button animation pulse
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('mouseover', () => {
+        btn.style.boxShadow = "0 0 20px rgba(255, 208, 0, 0.7)";
+      });
+      btn.addEventListener('mouseout', () => {
+        btn.style.boxShadow = "none";
+      });
+    });
+  </script>
+</body>
+</html>
