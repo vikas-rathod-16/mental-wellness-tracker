@@ -12,7 +12,7 @@ const SYSTEM_PROMPT =
   "or a crisis line.";
 
 /**
- * Very small fallback so the demo still works with no OPENAI_API_KEY set.
+ * Very small fallback so the demo still works with no GROQ_API_KEY set.
  */
 function fallbackReply(message) {
   const text = message.toLowerCase();
@@ -42,27 +42,43 @@ router.post("/", async (req, res) => {
 
   let reply;
 
-  if (process.env.OPENAI_API_KEY) {
+  if (process.env.GROQ_API_KEY) {
     try {
+      // Pull the last few messages for this user so replies feel like a
+      // real ongoing conversation, not a one-off Q&A.
+      const recentHistory = userId
+        ? await ChatMessage.find({ userId }).sort({ timestamp: -1 }).limit(6)
+        : [];
+      recentHistory.reverse(); // oldest first
+
+      const conversationMessages = [];
+      for (const entry of recentHistory) {
+        conversationMessages.push({ role: "user", content: entry.message });
+        conversationMessages.push({ role: "assistant", content: entry.reply });
+      }
+      conversationMessages.push({ role: "user", content: message });
+
       const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
+        "https://api.groq.com/openai/v1/chat/completions",
         {
-          model: "gpt-4o-mini",
+          model: "llama-3.3-70b-versatile",
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
-            { role: "user", content: message },
+            ...conversationMessages,
           ],
+          temperature: 0.7,
+          max_tokens: 200,
         },
         {
           headers: {
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+            Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
             "Content-Type": "application/json",
           },
         }
       );
       reply = response.data.choices[0].message.content.trim();
     } catch (err) {
-      console.error("OpenAI error:", err.response?.data || err.message);
+      console.error("Groq error:", err.response?.data || err.message);
       reply = fallbackReply(message);
     }
   } else {
