@@ -1,0 +1,274 @@
+/* ============================================================
+   theme.css — Modern Gen Z Aesthetic Theme for CalmMind
+   Vibrant cyber-zen accents, frosted glass, refined typography
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* ---- Gen Z Aesthetic Palette (Light Mode) ---- */
+  --bg: #f8fafc;
+  --bg-gradient: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                 radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+                 #f8fafc;
+  --surface: rgba(255, 255, 255, 0.8);
+  --surface-solid: #ffffff;
+  --surface-border: rgba(226, 232, 240, 0.85);
+  --surface-glass: rgba(255, 255, 255, 0.68);
+  
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+  
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --accent-hover: #4f46e5;
+  --accent-glow: rgba(99, 102, 241, 0.35);
+  
+  --mint: #10b981;
+  --mint-tint: rgba(16, 185, 129, 0.12);
+  --peach: #fb7185;
+  --peach-tint: rgba(251, 113, 133, 0.12);
+  --lavender: #8b5cf6;
+  --lavender-tint: rgba(139, 92, 246, 0.12);
+  
+  --accent-contrast: #ffffff;
+  --bg-soft: rgba(255, 255, 255, 0.7);
+  --focus-ring: 0 0 0 3px rgba(99, 102, 241, 0.28);
+  --shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.07);
+  --shadow-lg: 0 20px 45px rgba(99, 102, 241, 0.12);
+  --glass-blur: blur(14px);
+}
+
+html[data-theme="dark"] {
+  /* ---- Gen Z Cyber-Zen (Dark Mode) ---- */
+  --bg: #090b14;
+  --bg-gradient: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                 radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 40%),
+                 #090b14;
+  --surface: rgba(17, 21, 37, 0.75);
+  --surface-solid: #111525;
+  --surface-border: rgba(255, 255, 255, 0.1);
+  --surface-glass: rgba(17, 21, 37, 0.65);
+  
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-subtle: #64748b;
+  
+  --accent: #818cf8;
+  --accent-light: #a5b4fc;
+  --accent-hover: #6366f1;
+  --accent-glow: rgba(129, 140, 248, 0.45);
+  --accent-contrast: #ffffff;
+  --bg-soft: rgba(17, 21, 37, 0.75);
+  --focus-ring: 0 0 0 3px rgba(129, 140, 248, 0.35);
+  
+  --mint: #34d399;
+  --mint-tint: rgba(52, 211, 153, 0.16);
+  --peach: #fda4af;
+  --peach-tint: rgba(253, 164, 175, 0.16);
+  --lavender: #a78bfa;
+  --lavender-tint: rgba(167, 139, 250, 0.16);
+  
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 20px 45px rgba(0, 0, 0, 0.65);
+  --glass-blur: blur(16px);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--text);
+  line-height: 1.55;
+  transition: background 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ============================================================
+   SHARED TOP NAVIGATION & HEADER (Back Button + Theme Toggle)
+   ============================================================ */
+.nav, .site-nav-bar, header.nav, .site-header, header.site-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100%;
+  padding: 16px 0 20px;
+  position: relative;
+  z-index: 50;
+}
+
+.nav-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px;
+  margin-left: auto;
+}
+
+/* Back button modern pill styling */
+.nav-back-btn,
+.back-btn,
+a.back {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 18px !important;
+  border-radius: 9999px !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--surface-border) !important;
+  color: var(--text) !important;
+  font-weight: 600 !important;
+  font-size: 0.88rem !important;
+  text-decoration: none !important;
+  box-shadow: var(--shadow-sm) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer;
+}
+
+.nav-back-btn:hover,
+.back-btn:hover,
+a.back:hover {
+  transform: translateX(-3px);
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+  background: var(--surface-solid) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* Theme Toggle Button placed firmly at top-right */
+.theme-toggle-btn,
+button#themeToggle,
+.icon-btn {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  border: 1px solid var(--surface-border) !important;
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 1.1rem !important;
+  box-shadow: var(--shadow-sm) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  outline: none;
+}
+
+.theme-toggle-btn:hover,
+button#themeToggle:hover,
+.icon-btn:hover {
+  transform: scale(1.1) rotate(15deg);
+  border-color: var(--accent) !important;
+  box-shadow: 0 4px 14px var(--accent-glow) !important;
+}
+
+/* ============================================================
+   SHARED GEN Z BUTTONS & ACTIONS
+   ============================================================ */
+.btn {
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 11px 24px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  line-height: 1.4;
+  outline: none;
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #3b82f6 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35) !important;
+  border: none !important;
+}
+
+.btn.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(99, 102, 241, 0.45) !important;
+  filter: brightness(1.06);
+}
+
+.btn.primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn.outline {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1.5px solid var(--surface-border) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn.outline:hover:not(:disabled) {
+  background: var(--mint-tint) !important;
+  border-color: var(--mint) !important;
+  color: var(--mint) !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn.outline:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ============================================================
+   SHARED CARDS & SURFACES
+   ============================================================ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+/* Typography & Utilities */
+h1, h2, h3 {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.small {
+  font-size: 0.84rem;
+}
+

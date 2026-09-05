@@ -6,5 +6,5 @@ librosa
 numpy
 soundfile
 fer
-opencv-python
+opencv-python-headless
 pydantic

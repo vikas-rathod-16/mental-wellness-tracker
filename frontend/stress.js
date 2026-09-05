@@ -1,8 +1,6 @@
-// stress.js
-// AI_URL: Python FastAPI service that does the actual text analysis
-// BACKEND_URL: Node/Express service that saves logs to MongoDB
-const AI_URL = "http://127.0.0.1:8001"; // <-- update for production
-const BACKEND_URL = "http://127.0.0.1:4000"; // <-- update for production
+// stress.js — Sentiment & Stress Check
+const AI_URL = (window.APP_CONFIG && window.APP_CONFIG.AI_URL) || "http://127.0.0.1:8001";
+const BACKEND_URL = (window.APP_CONFIG && window.APP_CONFIG.BACKEND_URL !== undefined) ? window.APP_CONFIG.BACKEND_URL : "http://127.0.0.1:4000";
 
 (function () {
   const moodInput = document.getElementById('moodInput');

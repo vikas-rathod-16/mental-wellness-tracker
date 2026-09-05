@@ -1,26 +1,250 @@
-/* stress.css — styles for stress.html (shares look with index, standalone) */
+/* stress.css — modern Gen-Z styling for stress.html */
 
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,Roboto,'Poppins',sans-serif;background:#f7fbff;color:#073044;padding:18px}
-.app{max-width:900px;margin:0 auto}
-.nav.small{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.back{font-weight:700;color:#075b8b;text-decoration:none}
-.card{background:white;border-radius:14px;padding:18px;border:1px solid rgba(0,0,0,0.04);box-shadow:0 8px 20px rgba(2,6,23,0.04)}
-.muted{color:#5f7b86}
-textarea{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);margin-top:10px;background:transparent}
-.controls{display:flex;gap:12px;margin-top:12px}
-.btn{padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
-.primary{background:linear-gradient(180deg,#61aefc,#3b8df2);color:white;border:none}
-.outline{background:transparent;border:2px solid #bfe6ff;color:#075b8b}
-.result{margin-top:14px}
-.result-card{padding:12px;border-radius:12px;text-align:center}
-.result-card.green{background:#dff6e8}
-.result-card.orange{background:#fff3db}
-.result-card.red{background:#ffe5e5}
-.stress-number{font-size:30px;font-weight:800}
-.footer{margin-top:16px;color:#6b8794}
+body {
+  padding: 10px 0 40px;
+}
 
-/* responsive */
-@media (max-width:640px){
-  .controls{flex-direction:column}
+.stress-card {
+  max-width: 660px;
+  margin: 10px auto 30px;
+  position: relative;
+}
+
+.card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 9999px;
+  background: var(--mint-tint);
+  color: #059669;
+  font-weight: 700;
+  font-size: 0.76rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+html[data-theme="dark"] .card-badge {
+  color: #34d399;
+}
+
+.stress-card h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.stress-card p.muted {
+  font-size: 0.93rem;
+  margin-bottom: 18px;
+}
+
+/* Quick prompt chips */
+.quick-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.prompt-chip {
+  background: var(--surface-solid);
+  border: 1px solid var(--surface-border);
+  color: var(--text);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.prompt-chip:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--lavender-tint);
+}
+
+/* Textarea input */
+.textarea-wrap {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+textarea {
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1.5px solid var(--surface-border);
+  background: var(--bg-soft);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.96rem;
+  line-height: 1.55;
+  resize: vertical;
+  min-height: 120px;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+textarea:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+  background: var(--surface-solid);
+}
+
+textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+/* Action controls */
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.controls .btn {
+  padding: 11px 24px;
+  font-size: 0.92rem;
+}
+
+.status-msg {
+  min-height: 20px;
+  margin-top: 10px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+/* Result Card */
+.result {
+  margin-top: 22px;
+  animation: slideFadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.result.hidden {
+  display: none;
+}
+
+@keyframes slideFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.result-card {
+  padding: 24px 22px;
+  border-radius: 20px;
+  text-align: center;
+  border: 1.5px solid var(--surface-border);
+  background: var(--surface-solid);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.result-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.result-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.06);
+  color: var(--text-muted);
+}
+html[data-theme="dark"] .result-pill {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.result-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.stress-number {
+  font-size: 3.2rem;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 4px 0 8px;
+  transition: color 0.3s ease;
+}
+
+.sentiment-detail {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Color thematic states */
+.result-card.green {
+  background: linear-gradient(180deg, var(--mint-tint) 0%, var(--surface-solid) 100%);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+.result-card.green .stress-number {
+  color: #059669;
+}
+html[data-theme="dark"] .result-card.green .stress-number {
+  color: #34d399;
+}
+
+.result-card.orange {
+  background: linear-gradient(180deg, var(--peach-tint) 0%, var(--surface-solid) 100%);
+  border-color: rgba(251, 113, 133, 0.35);
+}
+.result-card.orange .stress-number {
+  color: #e11d48;
+}
+html[data-theme="dark"] .result-card.orange .stress-number {
+  color: #fb7185;
+}
+
+.result-card.red {
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.16) 0%, var(--surface-solid) 100%);
+  border-color: rgba(239, 68, 68, 0.45);
+}
+.result-card.red .stress-number {
+  color: #dc2626;
+}
+html[data-theme="dark"] .result-card.red .stress-number {
+  color: #f87171;
+}
+
+.site-footer {
+  text-align: center;
+  padding: 24px 0 30px;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 640px) {
+  .controls {
+    flex-direction: column;
+    width: 100%;
+  }
+  .controls .btn {
+    width: 100%;
+  }
 }

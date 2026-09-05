@@ -2,74 +2,137 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Voice Tone Stress Detector</title>
+  <title>CalmMind — Voice Tone Detector</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="theme.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f172a; /* slate-900 */
-      --card: #111827; /* gray-900 */
-      --text: #e5e7eb; /* gray-200 */
-      --accent: #22c55e; /* green-500 */
-      --warn: #fbbf24; /* amber-400 */
-      --alert: #ef4444; /* red-500 */
-      --muted: #9ca3af; /* gray-400 */
+      --warn: #F5A85D;
+      --alert: #EF4444;
     }
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-      background: radial-gradient(1200px circle at 10% 10%, #0b1220, var(--bg));
-      color: var(--text);
-      margin: 0; padding: 2rem;
-      display: grid; place-items: center;
+    html[data-theme="dark"] {
+      --warn: #FFC98A;
+      --alert: #F87171;
     }
-    .app {
-      max-width: 800px; width: 100%;
-      background: linear-gradient(180deg, #0e1525, var(--card));
-      border: 1px solid #1f2937;
-      border-radius: 16px; padding: 1.5rem;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    body { padding: 10px 0 50px; }
+    .app { max-width: 840px; margin: 0 auto; }
+    
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      border-radius: 9999px;
+      background: var(--peach-tint);
+      color: #e11d48;
+      font-weight: 700;
+      font-size: 0.76rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      border: 1px solid rgba(251, 113, 133, 0.25);
     }
-    h1 { margin: 0 0 0.5rem; font-weight: 700; letter-spacing: 0.2px; }
-    p.subtitle { margin: 0 0 1rem; color: var(--muted); }
-    .controls { display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
-    button {
-      background: #1f2937; color: var(--text);
-      border: 1px solid #334155; padding: 0.6rem 1rem;
-      border-radius: 10px; cursor: pointer;
+    html[data-theme="dark"] .card-badge {
+      color: #fda4af;
     }
-    button.primary { background: #2563eb; border-color: #1d4ed8; }
-    button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .card {
-      background: #0b1220; border: 1px solid #1f2937;
-      border-radius: 12px; padding: 1rem;
+
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      margin: 4px 0 6px;
+      letter-spacing: -0.02em;
     }
-    .meter { height: 12px; background: #1f2937; border-radius: 999px; overflow: hidden; margin-top: 0.5rem; }
-    .bar { height: 100%; width: 0%; background: var(--accent); transition: width 180ms ease, background 180ms ease; }
-    .stat { display: flex; justify-content: space-between; margin: 0.2rem 0; color: var(--muted); }
-    .score {
-      font-size: 2.2rem; font-weight: 800; margin: 0.25rem 0;
+    p.subtitle { color: var(--text-muted); margin: 0 0 20px; font-size: 0.94rem; }
+    
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
     }
-    .score.low { color: var(--accent); }
+    .controls .btn {
+      padding: 10px 22px;
+      font-size: 0.9rem;
+    }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+
+    .meter { height: 10px; background: var(--surface-border); border-radius: 999px; overflow: hidden; margin-top: 0.5rem; }
+    .bar { height: 100%; width: 0%; background: var(--mint); transition: width 180ms ease, background 180ms ease; }
+    .stat { display: flex; justify-content: space-between; margin: 0.5rem 0 0; color: var(--text-muted); font-size: 0.92rem; font-weight: 500; }
+    .stat span:last-child { font-weight: 700; color: var(--text); }
+
+    .score { font-size: 3rem; font-weight: 800; margin: 0.4rem 0; font-family: 'Outfit', sans-serif; }
+    .score.low { color: var(--mint); }
     .score.med { color: var(--warn); }
     .score.high { color: var(--alert); }
-    .notes { font-size: 0.92rem; color: var(--muted); margin-top: 0.75rem; }
-    canvas { width: 100%; height: 80px; background: #0b1220; border: 1px solid #1f2937; border-radius: 8px; }
+
+    .notes { font-size: 0.88rem; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.5; }
+    canvas { width: 100%; height: 86px; background: var(--bg-soft); border: 1px solid var(--surface-border); border-radius: 14px; margin-top: 10px; }
+    ul { padding-left: 1.2rem; color: var(--text); line-height: 1.6; }
+    
+    .site-footer {
+      text-align: center;
+      padding: 24px 0 10px;
+      font-size: 0.82rem;
+    }
   </style>
 </head>
 <body>
-  <div class="app">
+  <div class="container app">
+
+    <!-- Cohesive Top Header: Back button on the left, Theme Toggle on the top-right -->
+    <header class="site-header">
+      <a class="nav-back-btn" href="index.html" aria-label="Back to Home">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Back to Home</span>
+      </a>
+      <div class="nav-actions">
+        <button id="themeToggle" class="theme-toggle-btn" aria-label="Switch to dark mode" title="Toggle Dark/Light Mode">🌙</button>
+      </div>
+    </header>
+
+    <div class="card-badge">✦ Acoustic Biomarker Analysis ✦</div>
     <h1>Voice Tone Stress Detector</h1>
-    <p class="subtitle">Live voice features → heuristic stress score (non-diagnostic)</p>
+    <p class="subtitle">Live vocal feature detection → real-time heuristic stress assessment (privacy-first).</p>
 
     <div class="controls">
-      <button id="startBtn" class="primary">Start microphone</button>
-      <button id="stopBtn" disabled>Stop</button>
-      <button id="calmBtn">Calming breath (2 min)</button>
+      <button id="startBtn" class="btn primary">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+          <line x1="12" y1="19" x2="12" y2="23"></line>
+          <line x1="8" y1="23" x2="16" y2="23"></line>
+        </svg>
+        <span>Start Microphone</span>
+      </button>
+      <button id="stopBtn" class="btn outline" disabled>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+        </svg>
+        <span>Stop</span>
+      </button>
+      <button id="calmBtn" class="btn outline">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M8 12s1.5-2 4-2 4 2 4 2"></path>
+          <line x1="9" y1="9" x2="9.01" y2="9"></line>
+          <line x1="15" y1="9" x2="15.01" y2="9"></line>
+        </svg>
+        <span>Calming Breath (2 min)</span>
+      </button>
     </div>
 
     <div class="grid">
       <div class="card">
-        <h3>Live features</h3>
+        <h3>Live Acoustic Features</h3>
         <div class="stat"><span>Loudness (RMS)</span><span id="rmsVal">0.00</span></div>
         <div class="meter"><div id="rmsBar" class="bar"></div></div>
 
@@ -82,30 +145,33 @@
         <div class="stat"><span>Speaking rate (segments/min)</span><span id="rateVal">0</span></div>
         <div class="meter"><div id="rateBar" class="bar"></div></div>
 
-        <div class="notes">Tip: speak a sentence or two. Higher loudness, erratic pitch, and rapid rate may increase score.</div>
+        <div class="notes">💡 <strong>Tip:</strong> Speak a sentence or two normally. Sudden loudness spikes, irregular pitch, or fast pacing indicate elevated stress.</div>
       </div>
 
       <div class="card">
-        <h3>Stress score</h3>
+        <h3>Live Stress Score</h3>
         <div id="scoreVal" class="score low">0</div>
-        <div class="notes">Heuristic blend of features (0–100). Low: 0–33, Medium: 34–66, High: 67–100.</div>
+        <div class="notes">Heuristic blend (0–100). Low: 0–33, Medium: 34–66, High: 67–100.</div>
         <canvas id="wave"></canvas>
       </div>
     </div>
 
-    <div class="card" style="margin-top:1rem;">
-      <h3>What’s measured</h3>
+    <div class="card" style="margin-top:1.25rem;">
+      <h3>What's Measured</h3>
       <ul>
-        <li><strong>Loudness:</strong> Root Mean Square of audio frames.</li>
-        <li><strong>Pitch:</strong> Autocorrelation-based fundamental frequency estimate.</li>
-        <li><strong>Pitch variability:</strong> Short-term standard deviation of pitch.</li>
-        <li><strong>Speaking rate:</strong> Voice-activity segments per minute (approx).</li>
+        <li><strong>Loudness (RMS):</strong> Root Mean Square amplitude of audio frames.</li>
+        <li><strong>Fundamental Pitch:</strong> Autocorrelation-based pitch frequency estimation.</li>
+        <li><strong>Pitch Variability:</strong> Short-term standard deviation of vocal intonation.</li>
+        <li><strong>Speaking Rate:</strong> Acoustic voice-activity segments measured per minute.</li>
       </ul>
-      <p class="notes">Use modern browsers (Chrome/Edge). For speech-to-text or sentiment, pair with the Web Speech API tutorials and text valence examples.</p>
     </div>
-    <a class="back" href="index.html">← Back</a>
+
+    <footer class="site-footer muted small">
+      CalmMind Voice Acoustic Engine · Local In-Browser Processing
+    </footer>
   </div>
 
+  <script src="theme.js"></script>
   <script>
     const startBtn = document.getElementById('startBtn');
     const stopBtn  = document.getElementById('stopBtn');
@@ -181,13 +247,10 @@
       stopBtn.disabled = true;
     }
 
-    // Autocorrelation pitch estimate
     function estimatePitch(buf, sampleRate) {
-      // Hanning window
       for (let i = 0; i < buf.length; i++) {
         buf[i] *= 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (buf.length - 1));
       }
-      // Autocorrelation
       const size = buf.length;
       const corr = new Float32Array(size);
       for (let lag = 0; lag < size; lag++) {
@@ -197,7 +260,6 @@
         }
         corr[lag] = sum;
       }
-      // Find peak after first minimum
       let d = 0;
       while (corr[d] > corr[d + 1]) d++;
       let maxIndex = d;
@@ -210,7 +272,7 @@
       }
       if (maxIndex === 0) return null;
       const freq = sampleRate / maxIndex;
-      if (freq < 50 || freq > 500) return null; // human speech range
+      if (freq < 50 || freq > 500) return null;
       return freq;
     }
 
@@ -232,20 +294,23 @@
       pitchVarBar.style.width = `${clamp01(pitchVar / 40) * 100}%`;
       rateBar.style.width = `${clamp01(rate / 200) * 100}%`;
 
-      // Heuristic score blend
       const wRms = 0.35, wVar = 0.35, wRate = 0.20, wPitch = 0.10;
       const nRms = clamp01(rms / 0.2);
       const nVar = clamp01(pitchVar / 40);
       const nRate = clamp01(rate / 180);
-      const nPitch = pitch ? clamp01((pitch - 150) / 200) : 0.2; // mid bias if unknown
+      const nPitch = pitch ? clamp01((pitch - 150) / 200) : 0.2;
       const score = Math.round(100 * (wRms*nRms + wVar*nVar + wRate*nRate + wPitch*nPitch));
 
       scoreEl.textContent = score;
       scoreEl.classList.remove('low','med','high');
       scoreEl.classList.add(score < 34 ? 'low' : score < 67 ? 'med' : 'high');
 
-      // Color ramps on bars
-      const colorFor = (v) => v < 0.34 ? '#22c55e' : v < 0.67 ? '#fbbf24' : '#ef4444';
+      const rootStyles = getComputedStyle(document.documentElement);
+      const colorFor = (v) => v < 0.34
+        ? rootStyles.getPropertyValue('--mint').trim()
+        : v < 0.67
+          ? rootStyles.getPropertyValue('--warn').trim()
+          : rootStyles.getPropertyValue('--alert').trim();
       rmsBar.style.background = colorFor(nRms);
       pitchBar.style.background = colorFor(nPitch);
       pitchVarBar.style.background = colorFor(nVar);
@@ -254,7 +319,7 @@
 
     function drawWave(buf) {
       ctx.clearRect(0,0,waveCanvas.width,waveCanvas.height);
-      ctx.strokeStyle = '#22c55e';
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--mint').trim();
       ctx.lineWidth = 2;
       ctx.beginPath();
       const h = waveCanvas.height / (window.devicePixelRatio || 1);
@@ -273,9 +338,8 @@
       const rms = computeRMS(data);
       const pitch = estimatePitch(data.slice(), audioCtx.sampleRate);
 
-      // Pitch history and variability
       if (pitch) pitchHistory.push(pitch);
-      if (pitchHistory.length > 60) pitchHistory.shift(); // ~1–2s window
+      if (pitchHistory.length > 60) pitchHistory.shift();
 
       let pitchVar = 0;
       if (pitchHistory.length > 8) {
@@ -284,18 +348,12 @@
         pitchVar = Math.sqrt(variance);
       }
 
-      // Simple VAD: RMS threshold with hysteresis
       const vadOn = rms > 0.02;
       const now = performance.now();
-      if (vadOn && !lastVadOn) {
-        vadSegments.push({ t: now, on: true });
-      }
-      if (!vadOn && lastVadOn) {
-        vadSegments.push({ t: now, on: false });
-      }
+      if (vadOn && !lastVadOn) vadSegments.push({ t: now, on: true });
+      if (!vadOn && lastVadOn) vadSegments.push({ t: now, on: false });
       lastVadOn = vadOn;
 
-      // Speaking rate: segment transitions per minute
       let rate = 0;
       if (startTime) {
         const elapsedMin = (now - startTime) / 60000;
@@ -325,7 +383,7 @@
         msg.textContent = `Breathing: ${step.label}`;
         i = (i + 1) % steps.length;
         cycles++;
-        if (cycles < 60) setTimeout(guide, step.secs * 1000); // ~2 minutes
+        if (cycles < 60) setTimeout(guide, step.secs * 1000);
         else msg.remove();
       }
       guide();

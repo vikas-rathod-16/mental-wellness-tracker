@@ -3,37 +3,79 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CalmMind — Chat</title>
+  <title>CalmMind — Wellness Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="chat.css">
 </head>
 <body>
-  <div id="app" data-theme="light">
+  <div id="app">
 
-    <header class="nav small">
-      <a class="back" href="index.html">← Back</a>
+    <!-- Cohesive Top Header: Back button on the left, Theme Toggle on the top-right -->
+    <header class="site-header container">
+      <a class="nav-back-btn" href="index.html" aria-label="Back to Home">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Back to Home</span>
+      </a>
       <div class="nav-actions">
-        <button id="themeToggle" class="icon-btn">🌙</button>
+        <button id="themeToggle" class="theme-toggle-btn" aria-label="Switch to dark mode" title="Toggle Dark/Light Mode">🌙</button>
       </div>
     </header>
 
     <main class="container">
       <section class="card chat-card">
-        <h2>Wellness Chat</h2>
+        <div class="chat-header-area">
+          <div class="card-badge">✦ AI Wellness Companion ✦</div>
+          <h2>Wellness Chat</h2>
+          <p class="muted">A safe, gentle space to reflect, decompress, or talk through whatever is on your mind.</p>
+        </div>
+
         <div id="chatBox" class="chat-box" role="log" aria-live="polite"></div>
 
+        <!-- Quick suggestion prompts -->
+        <div class="chat-prompts">
+          <button type="button" class="chat-chip" onclick="sendQuickPrompt('I feel anxious about tomorrow. Can you help me ground myself?')">🕊️ Grounding Exercise</button>
+          <button type="button" class="chat-chip" onclick="sendQuickPrompt('Give me a quick 3-step mindfulness tip for stress.')">✨ 3-Step Calm</button>
+          <button type="button" class="chat-chip" onclick="sendQuickPrompt('Help me reframe a negative thought I am having right now.')">💭 Thought Reframe</button>
+        </div>
+
         <form id="chatForm" class="chat-form" onsubmit="return false;">
-          <input id="chatInput" placeholder="How are you feeling?" autocomplete="off" />
-          <button id="sendBtn" class="btn primary">Send</button>
+          <input id="chatInput" placeholder="Type what you are feeling or ask a question..." autocomplete="off" />
+          <button id="sendBtn" class="btn primary" type="submit">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            <span>Send</span>
+          </button>
         </form>
 
-        <div id="chatStatus" class="muted small" style="margin-top:10px"></div>
+        <div id="chatStatus" class="muted small" style="min-height:18px; margin-top:8px;"></div>
       </section>
     </main>
 
-    <footer class="footer container muted">Change API URL in <code>chat.js</code>.</footer>
+    <footer class="site-footer muted container small">
+      CalmMind Companion · Confidential & Empathetic AI Guidance
+    </footer>
   </div>
 
+  <script>
+    function sendQuickPrompt(txt) {
+      const inp = document.getElementById('chatInput');
+      const btn = document.getElementById('sendBtn');
+      if (inp && btn) {
+        inp.value = txt;
+        btn.click();
+      }
+    }
+  </script>
+  <script src="theme.js"></script>
+  <script src="config.js"></script>
   <script src="chat.js"></script>
-  
 </body>
 </html>

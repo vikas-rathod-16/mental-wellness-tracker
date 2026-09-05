@@ -1,0 +1,33 @@
+﻿services:
+  # 1. Main Web Service: Node.js Express (serves frontend, /chat, /stress, and proxies /ai)
+  - type: web
+    name: calmmind-app
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: AI_SERVICE_URL
+        fromService:
+          type: web
+          name: calmmind-ai
+          property: host
+
+  # 2. AI Service: Python FastAPI (Text sentiment and face emotion detection)
+  - type: web
+    name: calmmind-ai
+    env: python
+    plan: free
+    rootDir: ai-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port 
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12

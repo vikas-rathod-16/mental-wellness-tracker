@@ -1,6 +1,5 @@
-// chat.js
-// BASE_URL: change to your API host for production
-const BASE_URL = "http://localhost:4000"; // <-- update for production
+// chat.js — Wellness Chat
+const BASE_URL = (window.APP_CONFIG && window.APP_CONFIG.BACKEND_URL !== undefined) ? window.APP_CONFIG.BACKEND_URL : "http://localhost:4000";
 
 (function () {
   const chatBox = document.getElementById('chatBox');

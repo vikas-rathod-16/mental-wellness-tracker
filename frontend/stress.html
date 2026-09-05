@@ -4,45 +4,96 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CalmMind — Stress Check</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="stress.css">
 </head>
 <body>
-  <div id="app" data-theme="light">
+  <div id="app">
 
-    <header class="nav small">
-      <a class="back" href="index.html" aria-label="Back to home">← Back</a>
+    <!-- Cohesive Top Header: Back button on the left, Theme Toggle on the top-right -->
+    <header class="site-header container">
+      <a class="nav-back-btn" href="index.html" aria-label="Back to Home">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Back to Home</span>
+      </a>
       <div class="nav-actions">
-        <button id="themeToggle" class="icon-btn">🌙</button>
+        <button id="themeToggle" class="theme-toggle-btn" aria-label="Switch to dark mode" title="Toggle Dark/Light Mode">🌙</button>
       </div>
     </header>
 
     <main class="container">
-      <section class="card">
-        <h2>Mood Check</h2>
-        <p class="muted">Type a short sentence about how you're feeling.</p>
+      <section class="stress-card card">
+        <div class="card-badge">✦ AI Sentiment Analysis ✦</div>
+        <h2>Mood & Stress Check</h2>
+        <p class="muted">Type a short sentence or paragraph about how you're feeling right now.</p>
 
-        <textarea id="moodInput" rows="5" placeholder="I feel..." aria-label="Mood input"></textarea>
+        <!-- Quick emotion chips for quick reflection -->
+        <div class="quick-prompts">
+          <button type="button" class="prompt-chip" onclick="setMoodText('Feeling calm, rested, and productive today.')">🌿 Peaceful</button>
+          <button type="button" class="prompt-chip" onclick="setMoodText('I have so many deadlines piling up and feeling quite stressed.')">⚡ Overwhelmed</button>
+          <button type="button" class="prompt-chip" onclick="setMoodText('A bit anxious about upcoming work, but trying to breathe.')">🕊️ Anxious</button>
+          <button type="button" class="prompt-chip" onclick="setMoodText('Excited and energized about current progress!')">✨ Energized</button>
+        </div>
+
+        <div class="textarea-wrap">
+          <textarea id="moodInput" rows="4" placeholder="How are you feeling right now? (e.g., 'Work has been hectic, but I feel hopeful...')" aria-label="Mood input"></textarea>
+        </div>
 
         <div class="controls">
-          <button id="checkBtn" class="btn primary">Check Stress</button>
-          <button id="saveBtn" class="btn outline" disabled>Save Log</button>
+          <button id="checkBtn" class="btn primary">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            <span>Check Stress</span>
+          </button>
+          <button id="saveBtn" class="btn outline" disabled>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            <span>Save Log</span>
+          </button>
         </div>
 
+        <div id="status" class="status-msg muted small"></div>
+
+        <!-- Result Card -->
         <div id="result" class="result hidden" aria-live="polite">
           <div id="resultCard" class="result-card">
-            <div class="result-title">Stress Level</div>
+            <div class="result-header">
+              <span class="result-pill">Analysis Output</span>
+            </div>
+            <div class="result-title">Estimated Stress Level</div>
             <div id="stressValue" class="stress-number">—</div>
-            <div id="sentimentText" class="muted small"></div>
+            <div id="sentimentText" class="sentiment-detail"></div>
           </div>
         </div>
-
-        <div id="status" class="muted small" style="margin-top:12px"></div>
       </section>
     </main>
 
-    <footer class="footer muted container">Change API URL in <code>stress.js</code> (BASE_URL).</footer>
+    <footer class="site-footer muted container small">
+      CalmMind AI Sentiment Analyzer · Privacy-First Local Processing
+    </footer>
   </div>
 
+  <script>
+    function setMoodText(txt) {
+      const el = document.getElementById('moodInput');
+      if (el) {
+        el.value = txt;
+        el.focus();
+      }
+    }
+  </script>
+  <script src="theme.js"></script>
+  <script src="config.js"></script>
   <script src="stress.js"></script>
 </body>
 </html>
