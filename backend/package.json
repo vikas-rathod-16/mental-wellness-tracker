@@ -1,6 +1,6 @@
 {
   "name": "mindease-backend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Backend for MindEase Hackathon AI wellness platform",
   "main": "index.js",
   "type": "module",
