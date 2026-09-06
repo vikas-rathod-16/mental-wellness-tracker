@@ -19,7 +19,10 @@ app.use(cors());
 
 // ------------------ AI SERVICE REVERSE PROXY ------------------
 // Mounted before express.json() to allow seamless streaming of multipart/form-data webcam frames
-const AI_SERVICE_URL = process.env.AI_SERVICE_URL || "http://127.0.0.1:8001";
+let AI_SERVICE_URL = process.env.AI_SERVICE_URL || "http://127.0.0.1:8001";
+if (AI_SERVICE_URL && !AI_SERVICE_URL.startsWith("http://") && !AI_SERVICE_URL.startsWith("https://")) {
+  AI_SERVICE_URL = `http://${AI_SERVICE_URL}`;
+}
 console.log(`📡 AI Service proxy target configured to: ${AI_SERVICE_URL}`);
 
 app.use(

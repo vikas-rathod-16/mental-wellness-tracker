@@ -7,9 +7,13 @@ from dotenv import load_dotenv
 import os
 import re
 import json
-import librosa
 import numpy as np
 import cv2
+
+try:
+    import librosa
+except ImportError:
+    librosa = None
 
 # Load environment variables
 load_dotenv()
