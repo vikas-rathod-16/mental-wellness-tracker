@@ -34,15 +34,24 @@ app.use(
     target: AI_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: { "^/ai": "" },
+    timeout: 60000,
+    proxyTimeout: 60000,
     onError: (err, req, res) => {
-      console.error("AI Proxy Error:", err.message);
+      console.warn("AI Proxy Notice (service warming up):", err.message);
       res.status(502).json({
-        error: "AI Service is temporarily unavailable or starting up.",
+        error: "AI Service is waking up from sleep mode (~30s). Please retry in a few seconds.",
         details: err.message,
       });
     },
   })
 );
+
+// Keep-alive warm-up ping for Render free tier so calmmind-ai stays awake
+if (AI_SERVICE_URL && AI_SERVICE_URL.startsWith("http")) {
+  setInterval(() => {
+    fetch(`${AI_SERVICE_URL}/health`).catch(() => {});
+  }, 9 * 60 * 1000); // every 9 minutes (before 15m sleep timeout)
+}
 
 app.use(express.json());
 

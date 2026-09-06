@@ -34,12 +34,26 @@ const BACKEND_URL = (window.APP_CONFIG && window.APP_CONFIG.BACKEND_URL !== unde
     statusEl.textContent = 'Analyzing…';
 
     try {
-      const res = await fetch(`${AI_URL}/analyze-text`, {
+      let res = await fetch(`${AI_URL}/analyze-text`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text })
       });
-      if (!res.ok) throw new Error('AI service error');
+
+      // If free cloud server was asleep, wait and auto-retry
+      if (!res.ok && (res.status === 502 || res.status === 504)) {
+        statusEl.textContent = 'Waking up cloud AI server, please wait…';
+        await new Promise(r => setTimeout(r, 3500));
+        res = await fetch(`${AI_URL}/analyze-text`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+      }
+
+      if (!res.ok) {
+        throw new Error(`AI service status: ${res.status}`);
+      }
 
       const body = await res.json();
       // shape returned by ai-service: { emotion, stress, sentimentScore, source }
@@ -50,11 +64,10 @@ const BACKEND_URL = (window.APP_CONFIG && window.APP_CONFIG.BACKEND_URL !== unde
       colorize(s);
       result.classList.remove('hidden');
       saveBtn.disabled = false;
-      statusEl.textContent = 'Done';
+      statusEl.textContent = 'Done ✓';
     } catch (err) {
-      console.error(err);
-      statusEl.textContent = 'Error — cannot reach backend';
-      alert('Unable to reach backend. Check console and ensure the server is running and CORS is enabled.');
+      console.warn('Analyze status:', err.message);
+      statusEl.textContent = 'Cloud instance is warming up. Click Check Stress again in a moment!';
     } finally {
       setLoading(false);
     }
