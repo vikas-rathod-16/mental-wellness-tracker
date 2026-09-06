@@ -16,6 +16,22 @@ router.post("/log", async (req, res) => {
       return res.status(400).json({ error: "text and stress are required" });
     }
 
+    // Gracefully handle stateless / demo mode when MONGO_URI is not configured
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(201).json({
+        ok: true,
+        savedLocally: true,
+        log: {
+          text,
+          stress,
+          sentimentScore,
+          emotion,
+          userId,
+          createdAt: new Date().toISOString(),
+        },
+      });
+    }
+
     const log = await StressLog.create({
       text,
       stress,
@@ -37,6 +53,10 @@ router.post("/log", async (req, res) => {
  */
 router.get("/history", async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.json({ logs: [], note: "Running in stateless demo mode" });
+    }
+
     const { userId, limit = 50 } = req.query;
     const filter = userId ? { userId } : {};
 
