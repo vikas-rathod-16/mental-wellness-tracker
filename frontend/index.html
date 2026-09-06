@@ -81,6 +81,24 @@
     html[data-theme="dark"] .site-nav-wrap {
       background: rgba(9, 11, 20, 0.82);
     }
+    /* Full-width responsive container pushing logo to left edge and actions to right edge */
+    .nav-container {
+      width: 100%;
+      max-width: 100%;
+      padding: 0 32px;
+      margin: 0 auto;
+    }
+    @media (min-width: 1280px) {
+      .nav-container {
+        padding: 0 48px;
+      }
+    }
+    @media (max-width: 768px) {
+      .nav-container {
+        padding: 0 16px;
+      }
+    }
+
     .site-nav {
       display: flex;
       justify-content: space-between;
@@ -170,6 +188,242 @@
     }
     .theme-toggle-btn:hover {
       transform: scale(1.08) rotate(15deg);
+    }
+
+    /* ====== SOUNDSCAPE PLAYER WIDGET IN NAV ====== */
+    .sound-player-widget {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 9999px;
+      padding: 3px 4px 3px 12px;
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.25s ease;
+    }
+    .sound-player-widget:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-md);
+    }
+    .sound-pill-btn {
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 4px 4px 0;
+      border-radius: 9999px;
+      transition: color 0.2s ease;
+      outline: none;
+    }
+    .sound-pill-btn:hover {
+      color: var(--accent);
+    }
+    
+    /* Animated sound wave bars */
+    .sound-wave-icon {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+      width: 14px;
+    }
+    .sound-wave-icon .bar {
+      width: 2.5px;
+      height: 4px;
+      background: var(--text-muted);
+      border-radius: 2px;
+      transition: height 0.2s ease, background 0.2s ease;
+    }
+    .sound-player-widget.playing .sound-wave-icon .bar {
+      background: var(--mint);
+    }
+    .sound-player-widget.playing .sound-wave-icon .bar-1 {
+      animation: soundWavePulse 0.9s ease-in-out infinite alternate;
+    }
+    .sound-player-widget.playing .sound-wave-icon .bar-2 {
+      animation: soundWavePulse 0.7s ease-in-out infinite alternate 0.2s;
+    }
+    .sound-player-widget.playing .sound-wave-icon .bar-3 {
+      animation: soundWavePulse 1.1s ease-in-out infinite alternate 0.4s;
+    }
+    @keyframes soundWavePulse {
+      0% { height: 3px; }
+      100% { height: 12px; }
+    }
+
+    /* Sound dropdown trigger button */
+    .sound-dropdown-trigger {
+      background: var(--mint-tint);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 9999px;
+      padding: 4px 9px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-left: 6px;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .sound-dropdown-trigger:hover {
+      background: rgba(16, 185, 129, 0.24);
+      transform: translateY(-1px);
+    }
+
+    /* Dropdown menu container */
+    .sound-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      width: 300px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid var(--surface-border);
+      border-radius: 18px;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 12px;
+      z-index: 120;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scale(0.97);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    html[data-theme="dark"] .sound-dropdown-menu {
+      background: rgba(17, 21, 37, 0.96);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+    }
+    .sound-dropdown-menu.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+
+    .sound-dropdown-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 6px 10px;
+      border-bottom: 1px solid var(--surface-border);
+      margin-bottom: 8px;
+    }
+    .sound-dropdown-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .sound-chip {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--mint);
+      background: var(--mint-tint);
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+    .sound-dropdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .sound-choice {
+      width: 100%;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: left;
+      cursor: pointer;
+      color: var(--text);
+      transition: all 0.18s ease;
+      outline: none;
+    }
+    .sound-choice:hover {
+      background: var(--lavender-tint);
+      border-color: rgba(139, 92, 246, 0.2);
+    }
+    .sound-choice.active {
+      background: var(--mint-tint);
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+    .sound-choice-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    .sound-choice-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .sound-choice-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .sound-choice-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.2;
+    }
+    .sound-choice-indicator {
+      font-size: 0.85rem;
+      color: transparent;
+      font-weight: bold;
+      transition: color 0.18s ease;
+    }
+    .sound-choice.active .sound-choice-indicator {
+      color: var(--mint);
+    }
+
+    /* Volume row */
+    .sound-volume-slider-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 10px 6px 4px;
+      border-top: 1px solid var(--surface-border);
+    }
+    .vol-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .vol-slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      max-width: 190px;
+    }
+    .vol-icon {
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+    #soundVolRange {
+      width: 100%;
+      height: 4px;
+      accent-color: var(--mint);
+      cursor: pointer;
     }
 
     /* ====== HERO: HIGHLIGHTED NATURE & COMPACT GEN Z CAPSULE ====== */
@@ -550,11 +804,11 @@
 </head>
 <body>
 
-  <!-- Top Navigation Bar -->
+  <!-- Top Navigation Bar (Corner-to-corner full width alignment) -->
   <div class="site-nav-wrap">
-    <div class="container">
+    <div class="nav-container">
       <header class="site-nav">
-        <!-- Logo framed in gradient badge with crisp meditation SVG -->
+        <!-- Logo framed in gradient badge with crisp meditation SVG (aligned near left corner) -->
         <a class="logo" href="index.html" aria-label="CalmMind Home">
           <span class="logo-badge" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -568,8 +822,90 @@
           <span>CalmMind</span>
         </a>
 
-        <!-- Right Side: Features, Contact and Theme toggle on the exact same row -->
+        <!-- Right Cluster: Calming Soundscape Player, Nav links & Theme switch (aligned near right corner) -->
         <div class="nav-right-cluster">
+          <!-- Interactive Sound of Music Player & Selector -->
+          <div class="sound-player-widget" id="soundWidget">
+            <button id="soundToggleBtn" class="sound-pill-btn" aria-label="Play or pause ambient relaxing sound" title="Play / Pause Relaxing Sound">
+              <span class="sound-wave-icon" id="soundWaveIcon">
+                <span class="bar bar-1"></span>
+                <span class="bar bar-2"></span>
+                <span class="bar bar-3"></span>
+              </span>
+              <span id="soundTitleText">🎧 Relaxing Audio</span>
+            </button>
+            <button id="soundMenuBtn" class="sound-dropdown-trigger" aria-label="Change ambient relaxing sound" title="Change Sound of Music">
+              <span id="soundActiveEmoji">🌿</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+
+            <!-- Dropdown Sound Menu with 5 peaceful soundscapes & volume slider -->
+            <div id="soundDropdown" class="sound-dropdown-menu">
+              <div class="sound-dropdown-head">
+                <span class="sound-dropdown-title">Choose Soundscape</span>
+                <span class="sound-chip">Infinite Loop</span>
+              </div>
+              <div class="sound-dropdown-list">
+                <button type="button" class="sound-choice active" data-sound="forest">
+                  <span class="sound-choice-icon">🌿</span>
+                  <div class="sound-choice-info">
+                    <span class="sound-choice-name">Forest & Songbirds</span>
+                    <span class="sound-choice-sub">Sunlit breeze, rustling leaves & chimes</span>
+                  </div>
+                  <span class="sound-choice-indicator">●</span>
+                </button>
+
+                <button type="button" class="sound-choice" data-sound="rain">
+                  <span class="sound-choice-icon">🌧️</span>
+                  <div class="sound-choice-info">
+                    <span class="sound-choice-name">Gentle Rain</span>
+                    <span class="sound-choice-sub">Cozy, steady raindrops pattering on leaves</span>
+                  </div>
+                  <span class="sound-choice-indicator">●</span>
+                </button>
+
+                <button type="button" class="sound-choice" data-sound="ocean">
+                  <span class="sound-choice-icon">🌊</span>
+                  <div class="sound-choice-info">
+                    <span class="sound-choice-name">Ocean Waves</span>
+                    <span class="sound-choice-sub">Rhythmic rolling surf & coastal calm</span>
+                  </div>
+                  <span class="sound-choice-indicator">●</span>
+                </button>
+
+                <button type="button" class="sound-choice" data-sound="zen">
+                  <span class="sound-choice-icon">🧘</span>
+                  <div class="sound-choice-info">
+                    <span class="sound-choice-name">Tibetan Singing Bowl</span>
+                    <span class="sound-choice-sub">432Hz deep meditative drone & chime</span>
+                  </div>
+                  <span class="sound-choice-indicator">●</span>
+                </button>
+
+                <button type="button" class="sound-choice" data-sound="wind">
+                  <span class="sound-choice-icon">🍃</span>
+                  <div class="sound-choice-info">
+                    <span class="sound-choice-name">Whispering Breeze</span>
+                    <span class="sound-choice-sub">Soft ambient stillness for deep focus</span>
+                  </div>
+                  <span class="sound-choice-indicator">●</span>
+                </button>
+              </div>
+
+              <!-- Volume Control -->
+              <div class="sound-volume-slider-row">
+                <span class="vol-label">Volume</span>
+                <div class="vol-slider-wrap">
+                  <span class="vol-icon">🔉</span>
+                  <input type="range" id="soundVolRange" min="0" max="100" value="50" aria-label="Sound volume">
+                  <span class="vol-icon">🔊</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <ul class="nav-links">
             <li><a href="#features">Features</a></li>
             <li><a href="#contact">Contact</a></li>
@@ -597,12 +933,6 @@
       <!-- Light translucent highlight overlay -->
       <div class="hero-overlay"></div>
     </div>
-
-    <!-- Ambient nature breeze audio toggle -->
-    <button id="ambientSoundBtn" class="ambient-sound-btn" aria-label="Toggle ambient nature breeze sound">
-      <span class="ambient-pulse-dot"></span>
-      <span id="soundBtnText">🎧 Nature Sound</span>
-    </button>
 
     <!-- Compact Floating Glass Capsule (Prevents text from dominating entire page) -->
     <div class="hero-content">
@@ -946,92 +1276,383 @@
     }
     requestAnimationFrame(renderNatureAnimation);
 
-    /* Ambient Audio */
-    let audioCtx = null;
-    let isPlayingAudio = false;
-    let windGainNode = null;
-    let chimeInterval = null;
-
-    const soundBtn = document.getElementById('ambientSoundBtn');
-    const soundBtnText = document.getElementById('soundBtnText');
-
-    function initAmbientAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
+    /* ============================================================
+       CALMMIND AMBIENT SOUNDSCAPE ENGINE (Web Audio API)
+       Pure synthesized peaceful audio: Forest, Rain, Ocean, Zen, Wind
+       ============================================================ */
+    class CalmMindAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.currentSound = 'forest';
+        this.isPlaying = false;
+        this.volume = 0.5;
+        this.masterGain = null;
+        this.activeNodes = [];
+        this.timerIds = [];
       }
 
-      const bufferSize = audioCtx.sampleRate * 2;
-      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const output = noiseBuffer.getChannelData(0);
-      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-      for (let i = 0; i < bufferSize; i++) {
-        const white = Math.random() * 2 - 1;
-        b0 = 0.99886 * b0 + white * 0.0555179;
-        b1 = 0.99332 * b1 + white * 0.0750759;
-        b2 = 0.96900 * b2 + white * 0.1538520;
-        b3 = 0.86650 * b3 + white * 0.3104856;
-        b4 = 0.55000 * b4 + white * 0.5329522;
-        b5 = -0.7616 * b5 - white * 0.0168980;
-        output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.03;
-        b6 = white * 0.115926;
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+          this.masterGain = this.ctx.createGain();
+          this.masterGain.gain.setValueAtTime(this.volume * 0.45, this.ctx.currentTime);
+          this.masterGain.connect(this.ctx.destination);
+        }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
       }
 
-      const whiteNoise = audioCtx.createBufferSource();
-      whiteNoise.buffer = noiseBuffer;
-      whiteNoise.loop = true;
-
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(300, audioCtx.currentTime);
-
-      windGainNode = audioCtx.createGain();
-      windGainNode.gain.setValueAtTime(0.001, audioCtx.currentTime);
-      windGainNode.gain.exponentialRampToValueAtTime(0.3, audioCtx.currentTime + 2);
-
-      whiteNoise.connect(filter);
-      filter.connect(windGainNode);
-      windGainNode.connect(audioCtx.destination);
-      whiteNoise.start();
-
-      function playZenChime() {
-        if (!isPlayingAudio) return;
-        const chimeOsc = audioCtx.createOscillator();
-        const chimeGain = audioCtx.createGain();
-        chimeOsc.type = 'sine';
-        chimeOsc.frequency.setValueAtTime(432, audioCtx.currentTime);
-        chimeGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-        chimeGain.gain.linearRampToValueAtTime(0.07, audioCtx.currentTime + 0.4);
-        chimeGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 4.2);
-
-        chimeOsc.connect(chimeGain);
-        chimeGain.connect(audioCtx.destination);
-        chimeOsc.start();
-        chimeOsc.stop(audioCtx.currentTime + 4.3);
+      setVolume(val) {
+        this.volume = Math.max(0, Math.min(1, val));
+        if (this.masterGain && this.ctx) {
+          this.masterGain.gain.setTargetAtTime(this.volume * 0.45, this.ctx.currentTime, 0.05);
+        }
       }
 
-      playZenChime();
-      chimeInterval = setInterval(playZenChime, 14000);
+      stopCurrent() {
+        this.timerIds.forEach(id => clearInterval(id));
+        this.timerIds = [];
+
+        this.activeNodes.forEach(node => {
+          try {
+            if (node.stop) node.stop();
+            if (node.disconnect) node.disconnect();
+          } catch (e) {}
+        });
+        this.activeNodes = [];
+      }
+
+      createPinkNoiseBuffer() {
+        const bufferSize = this.ctx.sampleRate * 3;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          b3 = 0.86650 * b3 + white * 0.3104856;
+          b4 = 0.55000 * b4 + white * 0.5329522;
+          b5 = -0.7616 * b5 - white * 0.0168980;
+          data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.04;
+          b6 = white * 0.115926;
+        }
+        return buffer;
+      }
+
+      createBrownNoiseBuffer() {
+        const bufferSize = this.ctx.sampleRate * 3;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let lastOut = 0.0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          data[i] = (lastOut + (0.02 * white)) / 1.02;
+          lastOut = data[i];
+          data[i] *= 0.28;
+        }
+        return buffer;
+      }
+
+      playForest() {
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = this.createPinkNoiseBuffer();
+        noise.loop = true;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(320, this.ctx.currentTime);
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.masterGain);
+        noise.start();
+        this.activeNodes.push(noise, filter, gain);
+
+        const playChimeOrBird = () => {
+          if (!this.isPlaying || this.currentSound !== 'forest') return;
+          const osc = this.ctx.createOscillator();
+          const g = this.ctx.createGain();
+          osc.type = 'sine';
+          const isBird = Math.random() > 0.45;
+          if (isBird) {
+            const startFreq = 2200 + Math.random() * 800;
+            osc.frequency.setValueAtTime(startFreq, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(startFreq + 600, this.ctx.currentTime + 0.08);
+            osc.frequency.exponentialRampToValueAtTime(startFreq - 200, this.ctx.currentTime + 0.22);
+            g.gain.setValueAtTime(0.001, this.ctx.currentTime);
+            g.gain.linearRampToValueAtTime(0.04, this.ctx.currentTime + 0.05);
+            g.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.35);
+            osc.connect(g);
+            g.connect(this.masterGain);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.36);
+          } else {
+            osc.frequency.setValueAtTime(432, this.ctx.currentTime);
+            g.gain.setValueAtTime(0.001, this.ctx.currentTime);
+            g.gain.linearRampToValueAtTime(0.06, this.ctx.currentTime + 0.3);
+            g.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 4.5);
+            osc.connect(g);
+            g.connect(this.masterGain);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 4.6);
+          }
+        };
+
+        const interval = setInterval(playChimeOrBird, 7000);
+        this.timerIds.push(interval);
+        setTimeout(playChimeOrBird, 600);
+      }
+
+      playRain() {
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = this.createPinkNoiseBuffer();
+        noise.loop = true;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(1200, this.ctx.currentTime);
+        filter.Q.setValueAtTime(0.8, this.ctx.currentTime);
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.42, this.ctx.currentTime);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.masterGain);
+        noise.start();
+        this.activeNodes.push(noise, filter, gain);
+
+        const playPatter = () => {
+          if (!this.isPlaying || this.currentSound !== 'rain') return;
+          const dropOsc = this.ctx.createOscillator();
+          const dropGain = this.ctx.createGain();
+          dropOsc.type = 'sine';
+          dropOsc.frequency.setValueAtTime(700 + Math.random() * 1400, this.ctx.currentTime);
+          dropOsc.frequency.exponentialRampToValueAtTime(300, this.ctx.currentTime + 0.04);
+          dropGain.gain.setValueAtTime(0.025, this.ctx.currentTime);
+          dropGain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.05);
+          dropOsc.connect(dropGain);
+          dropGain.connect(this.masterGain);
+          dropOsc.start();
+          dropOsc.stop(this.ctx.currentTime + 0.06);
+        };
+
+        const interval = setInterval(playPatter, 280);
+        this.timerIds.push(interval);
+      }
+
+      playOcean() {
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = this.createBrownNoiseBuffer();
+        noise.loop = true;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(360, this.ctx.currentTime);
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+
+        const lfo = this.ctx.createOscillator();
+        lfo.frequency.setValueAtTime(0.14, this.ctx.currentTime); // ~7.1s wave cycle
+        const lfoGain = this.ctx.createGain();
+        lfoGain.gain.setValueAtTime(0.35, this.ctx.currentTime);
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(gain.gain);
+        lfo.start();
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.masterGain);
+        noise.start();
+
+        this.activeNodes.push(noise, filter, gain, lfo, lfoGain);
+      }
+
+      playZen() {
+        const freqs = [108, 108.4, 216, 432];
+        freqs.forEach((f, idx) => {
+          const osc = this.ctx.createOscillator();
+          const g = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(f, this.ctx.currentTime);
+          const targetGain = idx === 0 ? 0.22 : 0.08 / (idx + 1);
+          g.gain.setValueAtTime(0.001, this.ctx.currentTime);
+          g.gain.linearRampToValueAtTime(targetGain, this.ctx.currentTime + 1.2);
+
+          osc.connect(g);
+          g.connect(this.masterGain);
+          osc.start();
+          this.activeNodes.push(osc, g);
+        });
+
+        const playBowlStrike = () => {
+          if (!this.isPlaying || this.currentSound !== 'zen') return;
+          const strikeOsc = this.ctx.createOscillator();
+          const strikeGain = this.ctx.createGain();
+          strikeOsc.type = 'sine';
+          strikeOsc.frequency.setValueAtTime(528, this.ctx.currentTime); // 528Hz Miracle tone
+          strikeGain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+          strikeGain.gain.linearRampToValueAtTime(0.11, this.ctx.currentTime + 0.1);
+          strikeGain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 7.5);
+
+          strikeOsc.connect(strikeGain);
+          strikeGain.connect(this.masterGain);
+          strikeOsc.start();
+          strikeOsc.stop(this.ctx.currentTime + 7.6);
+        };
+
+        const interval = setInterval(playBowlStrike, 11000);
+        this.timerIds.push(interval);
+        setTimeout(playBowlStrike, 400);
+      }
+
+      playWind() {
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = this.createPinkNoiseBuffer();
+        noise.loop = true;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(240, this.ctx.currentTime);
+
+        const gain = this.ctx.createGain();
+        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+
+        const lfo = this.ctx.createOscillator();
+        lfo.frequency.setValueAtTime(0.18, this.ctx.currentTime);
+        const lfoGain = this.ctx.createGain();
+        lfoGain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(gain.gain);
+        lfo.start();
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.masterGain);
+        noise.start();
+
+        this.activeNodes.push(noise, filter, gain, lfo, lfoGain);
+      }
+
+      playSelected() {
+        switch (this.currentSound) {
+          case 'forest': this.playForest(); break;
+          case 'rain': this.playRain(); break;
+          case 'ocean': this.playOcean(); break;
+          case 'zen': this.playZen(); break;
+          case 'wind': this.playWind(); break;
+          default: this.playForest();
+        }
+      }
+
+      setSound(soundType) {
+        this.currentSound = soundType;
+        if (this.isPlaying) {
+          this.stopCurrent();
+          this.playSelected();
+        }
+      }
+
+      toggle() {
+        this.init();
+        if (!this.isPlaying) {
+          this.isPlaying = true;
+          this.playSelected();
+          return true;
+        } else {
+          this.stopCurrent();
+          this.isPlaying = false;
+          return false;
+        }
+      }
     }
 
-    soundBtn.addEventListener('click', () => {
-      if (!isPlayingAudio) {
-        initAmbientAudio();
-        isPlayingAudio = true;
-        soundBtn.classList.add('playing');
-        soundBtnText.textContent = '⏸ Pause Sound';
+    // Initialize UI Controls for Ambient Soundscape
+    const soundEngine = new CalmMindAudioEngine();
+    const soundWidget = document.getElementById('soundWidget');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const soundMenuBtn = document.getElementById('soundMenuBtn');
+    const soundDropdown = document.getElementById('soundDropdown');
+    const soundTitleText = document.getElementById('soundTitleText');
+    const soundActiveEmoji = document.getElementById('soundActiveEmoji');
+    const soundVolRange = document.getElementById('soundVolRange');
+    const soundChoices = document.querySelectorAll('.sound-choice');
+
+    const soundNames = {
+      forest: { name: 'Forest Audio', emoji: '🌿' },
+      rain: { name: 'Gentle Rain', emoji: '🌧️' },
+      ocean: { name: 'Ocean Waves', emoji: '🌊' },
+      zen: { name: 'Singing Bowl', emoji: '🧘' },
+      wind: { name: 'Whisper Wind', emoji: '🍃' }
+    };
+
+    function updateSoundUi(isPlaying) {
+      if (isPlaying) {
+        soundWidget.classList.add('playing');
+        const s = soundNames[soundEngine.currentSound] || soundNames.forest;
+        soundTitleText.textContent = '⏸ Pause';
+        soundActiveEmoji.textContent = s.emoji;
       } else {
-        if (windGainNode && audioCtx) {
-          windGainNode.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
-        }
-        clearInterval(chimeInterval);
-        isPlayingAudio = false;
-        soundBtn.classList.remove('playing');
-        soundBtnText.textContent = '🎧 Nature Sound';
+        soundWidget.classList.remove('playing');
+        soundTitleText.textContent = '🎧 Relaxing Audio';
       }
+    }
+
+    if (soundToggleBtn) {
+      soundToggleBtn.addEventListener('click', () => {
+        const isPlaying = soundEngine.toggle();
+        updateSoundUi(isPlaying);
+      });
+    }
+
+    if (soundMenuBtn && soundDropdown) {
+      soundMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        soundDropdown.classList.toggle('open');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!soundWidget.contains(e.target)) {
+          soundDropdown.classList.remove('open');
+        }
+      });
+    }
+
+    soundChoices.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const soundType = btn.getAttribute('data-sound');
+        soundChoices.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const s = soundNames[soundType] || soundNames.forest;
+        soundActiveEmoji.textContent = s.emoji;
+
+        soundEngine.init();
+        soundEngine.setSound(soundType);
+        if (!soundEngine.isPlaying) {
+          soundEngine.isPlaying = true;
+          soundEngine.playSelected();
+        }
+        updateSoundUi(true);
+      });
     });
+
+    if (soundVolRange) {
+      soundVolRange.addEventListener('input', (e) => {
+        soundEngine.setVolume(Number(e.target.value) / 100);
+      });
+    }
   </script>
 </body>
 </html>
