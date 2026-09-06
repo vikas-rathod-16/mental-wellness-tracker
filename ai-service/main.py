@@ -222,4 +222,6 @@ async def analyze_face(file: UploadFile = File(...)):
 # ---------------------- SERVER ----------------------
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True)
+    port = int(os.environ.get("PORT", 10000))
+    print(f"Starting CalmMind AI microservice on port {port}...")
+    uvicorn.run(app, host="0.0.0.0", port=port)
