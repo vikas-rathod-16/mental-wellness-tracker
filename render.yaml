@@ -6,7 +6,7 @@ services:
     plan: free
     rootDir: backend
     buildCommand: npm install
-    startCommand: node index.js
+    startCommand: node index.js || node backend/index.js
     envVars:
       - key: NODE_ENV
         value: production
@@ -27,7 +27,7 @@ services:
     plan: free
     rootDir: ai-service
     buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port 10000
+    startCommand: uvicorn main:app --app-dir ai-service --host 0.0.0.0 --port 10000
     envVars:
       - key: PORT
         value: 10000
