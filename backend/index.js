@@ -20,8 +20,11 @@ app.use(cors());
 // ------------------ AI SERVICE REVERSE PROXY ------------------
 // Mounted before express.json() to allow seamless streaming of multipart/form-data webcam frames
 let AI_SERVICE_URL = process.env.AI_SERVICE_URL || "http://127.0.0.1:8001";
-if (AI_SERVICE_URL && !AI_SERVICE_URL.startsWith("http://") && !AI_SERVICE_URL.startsWith("https://")) {
-  AI_SERVICE_URL = `http://${AI_SERVICE_URL}`;
+const rawTarget = AI_SERVICE_URL.replace(/^https?:\/\//, "");
+if (!rawTarget.includes(".") && !rawTarget.includes("localhost") && !rawTarget.includes("127.0.0.1")) {
+  AI_SERVICE_URL = `https://${rawTarget}.onrender.com`;
+} else if (!AI_SERVICE_URL.startsWith("http://") && !AI_SERVICE_URL.startsWith("https://")) {
+  AI_SERVICE_URL = `https://${rawTarget}`;
 }
 console.log(`📡 AI Service proxy target configured to: ${AI_SERVICE_URL}`);
 
